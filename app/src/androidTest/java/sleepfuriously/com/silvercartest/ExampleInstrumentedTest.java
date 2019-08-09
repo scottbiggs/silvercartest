@@ -1,4 +1,4 @@
-package sleepfuriously.com.silvecartest;
+package sleepfuriously.com.silvercartest;
 
 import android.content.Context;
 
