@@ -52,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
     /** Adapter for {@link MainActivity#mLocationsRV}. */
     private LocationRVAdapter mLocationAdapter;
 
+
     //-------------------------
     //  methods
     //-------------------------
@@ -59,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.main);
 
         // First things first, gotta be on the  internet!
         if (!isInternetAvailable()) {
@@ -68,9 +69,23 @@ public class MainActivity extends AppCompatActivity {
             finish();
         }
 
-//        Toolbar toolbar = findViewById(R.id.toolbar);
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
 //        setSupportActionBar(toolbar);
-//        toolbar.setTitle(getTitle());
+        String titleStr = getString(R.string.app_name) + " (" +
+                getString(R.string.toolbar_title) + ")";
+        toolbar.setTitle(titleStr);
+
+        // back button
+        toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_arrow_back_white_24dp));
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // just exit program for this simple programming challenge
+                finish();
+            }
+        });
+
 
     } // onCreate(savedInstanceState)
 
