@@ -1,4 +1,4 @@
-package sleepfuriously.com.silvercartest.Model;
+package sleepfuriously.com.silvercartest.model;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -28,15 +28,15 @@ public class Address {
     //  data
     //-------------------
 
-    long id;
-    String line1;
-    String line2;
-    String city;
-    String state;
-    String zip;
-    String country;
-    double latitude;
-    double longitude;
+    public long id;
+    public String line1;
+    public String line2;
+    public String city;
+    public String state;
+    public String zip;
+    public String country;
+    public double latitude;
+    public double longitude;
 
 
     //-------------------

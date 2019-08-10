@@ -1,4 +1,4 @@
-package sleepfuriously.com.silvercartest.Model;
+package sleepfuriously.com.silvercartest.model;
 
 import android.annotation.SuppressLint;
 
@@ -8,9 +8,7 @@ import org.json.JSONObject;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.format.DateTimeFormatter;
 import java.util.Date;
-import java.util.Locale;
 
 /**
  * Data representation of a Location.
@@ -52,25 +50,25 @@ public class Location {
 
     // NOTE: public for simplicity.  Also, class names reflect C version from server (presumably)
 
-    long id;
-    String name;
-    String airport_code;
-    String phone_number;
-    String text_number;
-    String fleet_type;
-    String multi_car_display_name;
-    Date open_date;
-    Date close_date;
-    String gds_code;
-    boolean deliverable;
-    String deliverable_description;
-    String description;
-    String time_zone;
-    boolean bookable;
-    String hours;
-    String asset_code;
-    Address address;
-    String curbside_detail;
+    public long id;
+    public String name;
+    public String airport_code;
+    public String phone_number;
+    public String text_number;
+    public String fleet_type;
+    public String multi_car_display_name;
+    public Date open_date;
+    public Date close_date;
+    public String gds_code;
+    public boolean deliverable;
+    public String deliverable_description;
+    public String description;
+    public String time_zone;
+    public boolean bookable;
+    public String hours;
+    public String asset_code;
+    public Address address;
+    public String curbside_detail;
 
     //-------------------
     //  methods
