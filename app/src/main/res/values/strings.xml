@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Silvercar Test</string>
 
-    <string name="no_internet_warning">This app requires internet access. Please enable internet and try again.</string>
+    <string name="no_internet_warning">The Silvercar Test app requires internet access. Please enable internet and try again.</string>
 
     <string name="location_image_desc">picture of a location</string>
     <string name="loc_logo_desc">logo of either a building or an airplane</string>

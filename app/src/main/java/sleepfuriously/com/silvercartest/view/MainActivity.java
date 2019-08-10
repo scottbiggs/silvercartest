@@ -8,8 +8,12 @@ import androidx.appcompat.widget.Toolbar;
 import com.google.android.material.snackbar.Snackbar;
 
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Toast;
 
 import sleepfuriously.com.silvercartest.R;
 
@@ -58,11 +62,11 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         // First things first, gotta be on the  internet!
-//        if (!isInternetAvailable()) {
-//            View v = findViewById(android.R.id.content);
-//            Snackbar.make(v, R.string.no_internet_warning, Snackbar.LENGTH_LONG).show();
-//            finish();
-//        }
+        if (!isInternetAvailable()) {
+            View v = findViewById(android.R.id.content);
+            Toast.makeText(this, R.string.no_internet_warning, Toast.LENGTH_LONG).show();
+            finish();
+        }
 
 //        Toolbar toolbar = findViewById(R.id.toolbar);
 //        setSupportActionBar(toolbar);
@@ -72,7 +76,12 @@ public class MainActivity extends AppCompatActivity {
 
 
     private boolean isInternetAvailable() {
-        return false;
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return (activeNetworkInfo != null)
+                && activeNetworkInfo.isAvailable()
+                && activeNetworkInfo.isConnected();
     }
 
 
