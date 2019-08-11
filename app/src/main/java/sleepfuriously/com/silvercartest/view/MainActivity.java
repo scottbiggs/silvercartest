@@ -16,12 +16,17 @@ import android.view.View;
 import android.widget.SearchView;
 import android.widget.Toast;
 
+import java.util.List;
+
 import sleepfuriously.com.silvercartest.R;
+import sleepfuriously.com.silvercartest.model.Location;
+import sleepfuriously.com.silvercartest.presenter.ModelWindow;
 
 /**
  * Starting point.  Works with both tablets and phones.
  */
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity
+        implements ModelWindow.ModelWindowLocationsListener {
 
     //-------------------------
     //  constants
@@ -112,6 +117,18 @@ public class MainActivity extends AppCompatActivity {
             mTwoPane = true;
         }
 
+        // load up the recyclerview
+        mLocationsRV = findViewById(R.id.locations_rv);
+
+        mProgressDialog = new ProgressDialog(this);
+        mProgressDialog.setCancelable(false);
+        mProgressDialog.setIndeterminate(true);
+        mProgressDialog.setTitle(R.string.loading_locations);
+        mProgressDialog.show();
+
+        // todo: model
+//        ModelWindow mw = ModelWindow.getInstance();
+//        mw.getLocationList(this, this);
 
 
     } // onCreate(savedInstanceState)
@@ -127,6 +144,12 @@ public class MainActivity extends AppCompatActivity {
         return (activeNetworkInfo != null)
                 && activeNetworkInfo.isAvailable()
                 && activeNetworkInfo.isConnected();
+    }
+
+
+    @Override
+    public void returnLocationList(List<Location> albums, boolean successful, String msg) {
+        // todo
     }
 
 
