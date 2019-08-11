@@ -1,12 +1,15 @@
 package sleepfuriously.com.silvercartest.presenter;
 
 import android.content.Context;
+import android.util.Log;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
 import org.json.JSONArray;
@@ -14,7 +17,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import sleepfuriously.com.silvercartest.model.Location;
 
@@ -39,11 +44,13 @@ public class ModelWindow {
     /** URL base for all data access for this project */
     public static final String URL_BASE = "https://api.rac-tst.com/";
 
-    /** URL for accessing the album list */
+    /** URL for accessing the location list */
     public static final String LOCATION_LIST_URL = URL_BASE + "locations";
 
     /** required header for api response */
-    public static final String API_HEADER = "Api-Version: 2";
+    public static final String
+            API_HEADER_KEY = "Api-Version",
+            API_HEADER_VALUE = "2";
 
     /**
      * Suffix strings to specify sorting of the locations by name.
@@ -88,7 +95,7 @@ public class ModelWindow {
     }
 
     /**
-     * Returns a list of all the albums to display.
+     * Returns a list of all the locations to display.
      *
      * @param listener  The instance that implements {@link ModelWindowLocationsListener}.
      *                  Its {@link ModelWindowLocationsListener#returnLocationList(List, boolean, String)}
@@ -99,21 +106,57 @@ public class ModelWindow {
     public void getLocationList(final ModelWindowLocationsListener listener, Context ctx) {
 
         RequestQueue q = Volley.newRequestQueue(ctx);
+
+
+/*
+        StringRequest getRequest = new StringRequest(Request.Method.GET, LOCATION_LIST_URL,
+                new Response.Listener<String>()
+                {
+                    @Override
+                    public void onResponse(String response) {
+                        // response
+                        Log.d("Response", response);
+                    }
+                },
+                new Response.ErrorListener()
+                {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // TODO Auto-generated method stub
+                        Log.d("ERROR","error => "+error.toString());
+                    }
+                }
+        )
+            {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String>  params = new HashMap<String, String>();
+                params.put("User-Agent", "Nintendo Gameboy");
+                params.put("Accept-Language", "fr");
+
+                return params;
+            }
+        };
+*/
+
+
+
+
         JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, LOCATION_LIST_URL, null,
                 new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
-                        List<Location> albumList = new ArrayList<>();
+                        List<Location> locationList = new ArrayList<>();
                         for (int i = 0; i < response.length(); i++) {
                             try {
                                 JSONObject jsonObject = (JSONObject)response.get(i);
-                                albumList.add(new Location(jsonObject));
+                                locationList.add(new Location(jsonObject));
                             }
                             catch (JSONException e) {
                                 e.printStackTrace();
                             }
                         }
-                        listener.returnLocationList(albumList, true, LOCATION_SUCCESS_MSG);
+                        listener.returnLocationList(locationList, true, LOCATION_SUCCESS_MSG);
                     }
                 },
                 new Response.ErrorListener() {
@@ -121,7 +164,19 @@ public class ModelWindow {
                     public void onErrorResponse(VolleyError error) {
                         listener.returnLocationList(null, false, error.getMessage());
                     }
-                });
+                }
+                )
+
+            // the following weirdness is needed to insert the proper header into
+            // the GET request
+        {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String>  params = new HashMap<String, String>();
+                params.put(API_HEADER_KEY, API_HEADER_VALUE);
+                return params;
+            }
+        };
         q.add(request);
     }
 

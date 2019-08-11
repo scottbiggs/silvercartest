@@ -12,6 +12,7 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.SearchView;
 import android.widget.Toast;
@@ -126,9 +127,8 @@ public class MainActivity extends AppCompatActivity
         mProgressDialog.setTitle(R.string.loading_locations);
         mProgressDialog.show();
 
-        // todo: model
-//        ModelWindow mw = ModelWindow.getInstance();
-//        mw.getLocationList(this, this);
+        ModelWindow mw = ModelWindow.getInstance();
+        mw.getLocationList(this, this);
 
 
     } // onCreate(savedInstanceState)
@@ -148,8 +148,19 @@ public class MainActivity extends AppCompatActivity
 
 
     @Override
-    public void returnLocationList(List<Location> albums, boolean successful, String msg) {
-        // todo
+    public void returnLocationList(List<Location> locations, boolean successful, String msg) {
+
+        mProgressDialog.dismiss();
+
+        if (!successful) {
+            Log.e(DTAG, "returnLocationList() is unsuccessful. Msg = " + msg);
+            Toast.makeText(this, R.string.no_internet_warning, Toast.LENGTH_LONG).show();
+            finish();
+            return; // might be redundant?
+        }
+
+        mLocationAdapter = new LocationRVAdapter(this, locations, mTwoPane);
+        mLocationsRV.setAdapter(mLocationAdapter);
     }
 
 
