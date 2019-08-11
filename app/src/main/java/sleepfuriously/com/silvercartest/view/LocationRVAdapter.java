@@ -1,5 +1,6 @@
 package sleepfuriously.com.silvercartest.view;
 
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,11 +42,11 @@ public class LocationRVAdapter extends RecyclerView.Adapter<LocationRVAdapter.Vi
     /** The currently selected item in the RV. Needed for highlighting etc. */
     private int mSelected = -1;
 
-    /** Normal background color for a Location list item */
-    private int mNormalBackground;
+    /** Normal background for a Location list item */
+    private Drawable mNormalBackground;
 
-    /** The color to use for a Location list item that is currently selected */
-    private int mHighlightBackground;
+    /** The background to use for a Location list item that is currently selected */
+    private Drawable mHighlightBackground;
 
 
     //------------------------
@@ -111,8 +112,12 @@ public class LocationRVAdapter extends RecyclerView.Adapter<LocationRVAdapter.Vi
         mTwoPane = twoPane;
 
         // Pre-calculate the colors to avoid slowing down onBindViewHolder
-        mNormalBackground = parent.getResources().getColor(R.color.location_item_background_normal);
-        mHighlightBackground = parent.getResources().getColor(R.color.location_item_background_highlight);
+//        mNormalBackground = parent.getResources().getColor(R.color.location_item_background_normal);
+//        mHighlightBackground = parent.getResources().getColor(R.color.location_item_background_highlight);
+
+        // Pre-calculate the colors to avoid slowing down onBindViewHolder
+        mNormalBackground = parent.getDrawable(R.drawable.rounded_normal);
+        mHighlightBackground = parent.getDrawable(R.drawable.rounded_selected);
     }
 
 
@@ -144,10 +149,10 @@ public class LocationRVAdapter extends RecyclerView.Adapter<LocationRVAdapter.Vi
 
         // Possibly highlight this as a selected item
         if (position == mSelected) {
-            holder.backgroundView.setBackgroundColor(mHighlightBackground);
+            holder.backgroundView.setBackground(mHighlightBackground);
         }
         else {
-            holder.backgroundView.setBackgroundColor(mNormalBackground);
+            holder.backgroundView.setBackground(mNormalBackground);
         }
     }
 
