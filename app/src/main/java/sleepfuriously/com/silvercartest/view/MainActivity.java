@@ -13,6 +13,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.SearchView;
 import android.widget.Toast;
 
 import sleepfuriously.com.silvercartest.R;
@@ -70,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
-        Toolbar toolbar = findViewById(R.id.toolbar);
+        final Toolbar toolbar = findViewById(R.id.toolbar);
 //        setSupportActionBar(toolbar);
         String titleStr = getString(R.string.app_name) + " (" +
                 getString(R.string.toolbar_title) + ")";
@@ -86,6 +87,23 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        // search button
+        final SearchView searchView = findViewById(R.id.search_view);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                // todo: remove this once the filter works
+                Snackbar.make(toolbar, s + " (todo: make this work!)", Snackbar.LENGTH_SHORT).show();
+                return false;   // let result fall through
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                // todo: filter as the user types
+                return false;
+            }
+        });
+
 
     } // onCreate(savedInstanceState)
 
@@ -93,6 +111,9 @@ public class MainActivity extends AppCompatActivity {
     private boolean isInternetAvailable() {
         ConnectivityManager connectivityManager
                 = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivityManager == null) {
+            return false;
+        }
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return (activeNetworkInfo != null)
                 && activeNetworkInfo.isAvailable()
