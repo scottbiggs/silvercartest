@@ -12,11 +12,14 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.squareup.picasso.Picasso;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import sleepfuriously.com.silvercartest.model.Location;
 import sleepfuriously.com.silvercartest.R;
+import sleepfuriously.com.silvercartest.presenter.ModelWindow;
 
 /**
  * Created on 2019-08-09.
@@ -148,6 +151,10 @@ public class LocationRVAdapter
         holder.descriptionTv.setText(loc.description);
 
         // todo: set the images
+        String photoUrl = ModelWindow.IMAGE_BASE_URL + ModelWindow.IMAGE_ASSET_SPECIFIER +
+                loc.asset_code + ModelWindow.IMAGE_FILENAME_SUFFIX;
+        Picasso.with(mParentActivity).load(photoUrl).into(holder.locationIv);
+
 
         // Store the adapter position of this item for use during onClick
         holder.itemView.setTag(position);
