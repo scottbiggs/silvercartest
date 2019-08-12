@@ -9,7 +9,6 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
 import org.json.JSONArray;
@@ -66,6 +65,17 @@ public class ModelWindow {
      * Oh yeah, each page is 25 items.
      */
     public static final String API_PAGE_SPECIFIER = "?page=";
+
+
+    /** base URL for images */
+    public static final String IMAGE_BASE_URL = "https://s3.amazonaws.com/production-silvercar-static-assets/";
+
+    /** indicates to retrieve an asset. Should be concatenated to IMAGE_BASE_URL */
+    public static final String IMAGE_ASSET_SPECIFIER = "assets/location-assets/";
+
+    /** image suffix--all images will end with this string */
+    public static final String IMAGE_FILENAME_SUFFIX = "_location_3x.jpg";
+
 
 
     //------------------------
