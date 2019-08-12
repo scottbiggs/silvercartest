@@ -86,7 +86,7 @@ public class ModelWindow {
      * As per the Singleton Pattern, return an instance of this
      * class.
      */
-    public static ModelWindow getInstance() {
+    public static synchronized ModelWindow getInstance() {
         if (mInstance == null) {
             // lazy instantiation--my fave!
             mInstance = new ModelWindow();

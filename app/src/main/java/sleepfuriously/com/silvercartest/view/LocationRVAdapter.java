@@ -4,12 +4,15 @@ import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import sleepfuriously.com.silvercartest.model.Location;
@@ -18,7 +21,9 @@ import sleepfuriously.com.silvercartest.R;
 /**
  * Created on 2019-08-09.
  */
-public class LocationRVAdapter extends RecyclerView.Adapter<LocationRVAdapter.ViewHolder> {
+public class LocationRVAdapter
+        extends RecyclerView.Adapter<LocationRVAdapter.ViewHolder>
+        implements Filterable {
 
     //----------------------
     //  constants
@@ -33,8 +38,11 @@ public class LocationRVAdapter extends RecyclerView.Adapter<LocationRVAdapter.Vi
     /** parent will always be MainActivity */
     private final MainActivity mParentActivity;
 
-    /** THE data to display */
+    /** original (entire) data list */
     private final List<Location> mLocationList;
+
+    /** THIS is the list of locations to diplay */
+    private List<Location> mFilteredLocationList;
 
     /** TRUE iff in two-pane mode (tablet) */
     private final boolean mTwoPane;
@@ -60,7 +68,7 @@ public class LocationRVAdapter extends RecyclerView.Adapter<LocationRVAdapter.Vi
 
             // The tag tells which location we're dealing with
             int currentlySelected = (int) view.getTag();
-            Location location = mLocationList.get(currentlySelected);
+            Location location = mFilteredLocationList.get(currentlySelected);
 
             // redraw the selection
             notifyItemChanged(mSelected);
@@ -73,9 +81,9 @@ public class LocationRVAdapter extends RecyclerView.Adapter<LocationRVAdapter.Vi
             if (mTwoPane) {
                 // Start the new Fragment
                 Bundle bundle = new Bundle();
-                bundle.putLong(PhotosFragment.ALBUM_ID_KEY, album.id);
+                bundle.putLong(LocationDetailFragment.LOCATION_ID_KEY, location.id);
 
-                PhotosFragment frag = new PhotosFragment();
+                LocationDetailFragment frag = new LocationDetailFragment();
                 frag.setArguments(bundle);
 
                 FragmentManager mgr = mParentActivity.getSupportFragmentManager();
@@ -91,7 +99,7 @@ public class LocationRVAdapter extends RecyclerView.Adapter<LocationRVAdapter.Vi
                 Context context = view.getContext();
                 Intent intent = new Intent(context, PhotosActivity.class);
 
-                intent.putExtra(PhotosFragment.ALBUM_ID_KEY, album.id);
+                intent.putExtra(LocationDetailFragment.LOCATION_ID_KEY, location.id);
                 context.startActivity(intent);
             }
 */
@@ -108,6 +116,8 @@ public class LocationRVAdapter extends RecyclerView.Adapter<LocationRVAdapter.Vi
                       List<Location> items,
                       boolean twoPane) {
         mLocationList = items;
+        mFilteredLocationList = filterBookableLocations(mLocationList);
+
         mParentActivity = parent;
         mTwoPane = twoPane;
 
@@ -130,7 +140,7 @@ public class LocationRVAdapter extends RecyclerView.Adapter<LocationRVAdapter.Vi
     public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
 
         // set data
-        Location loc = mLocationList.get(position);
+        Location loc = mFilteredLocationList.get(position);
         holder.id = loc.id;
 
         holder.nameTv.setText(loc.name);
@@ -154,8 +164,83 @@ public class LocationRVAdapter extends RecyclerView.Adapter<LocationRVAdapter.Vi
 
     @Override
     public int getItemCount() {
-        return mLocationList.size();
+        return mFilteredLocationList.size();
     }
+
+
+    /**
+     * Returns a list with all the non-bookable locations removed
+     *
+     * If the input is null or empty, then that's what is returned.
+     */
+    private List<Location> filterBookableLocations(List<Location> inList) {
+
+        if ((inList == null) || (inList.size() == 0)) {
+            return inList;
+        }
+
+        List<Location> filtered = new ArrayList<>();
+        for (Location loc : inList) {
+            if (loc.bookable) {
+                filtered.add(loc);
+            }
+        }
+        return filtered;
+    }
+
+
+    /**
+     * Figures out and filters our locations list.  Sorry, but this works
+     * pretty much entirely by side-effect.  todo: make this functional!
+     *
+     * preconditions:
+     *      mLocationList       Holds all the locations that we're interested in
+     *
+     * side-effects:
+     *      mFilteredLocationList   Holds only the items that fit our filter criteria
+     *
+     * @return
+     */
+    @Override
+    public Filter getFilter() {
+        return new Filter() {
+            @Override
+            protected FilterResults performFiltering(CharSequence constraint) {
+                if ((constraint == null) || (constraint.length() == 0)) {
+                    // no constraints, use entire list
+                    mFilteredLocationList = mLocationList;
+                    return null;
+                }
+                List<Location> filteredList = new ArrayList<>();
+                for (Location loc : mLocationList) {
+                    // check here for matches and other filter criteria
+                    // todo: add search bar to our condition
+                    if (loc.bookable) {
+                        filteredList.add(loc);
+                    }
+                }
+
+                mFilteredLocationList = filteredList;
+
+                FilterResults results = new FilterResults();
+                results.values = mFilteredLocationList;
+                return results;
+            }
+
+            @Override
+            protected void publishResults(CharSequence constraint,
+                                          FilterResults filterResults) {
+                // todo: check to see if this is redundant with the above side-effect
+
+                if ((filterResults != null) && (filterResults.values != null)) {
+                    mFilteredLocationList = (List<Location>) filterResults.values;
+
+                    notifyDataSetChanged();
+                }
+            }
+        };
+
+    } // getFilter()
 
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
