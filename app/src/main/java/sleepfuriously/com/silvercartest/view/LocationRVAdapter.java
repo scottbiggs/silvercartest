@@ -150,7 +150,7 @@ public class LocationRVAdapter
         holder.airportCodeTv.setText(loc.airport_code);
         holder.descriptionTv.setText(loc.description);
 
-        // todo: set the images
+        // set the images
         String photoUrl = ModelWindow.IMAGE_BASE_URL + ModelWindow.IMAGE_ASSET_SPECIFIER +
                 loc.asset_code + ModelWindow.IMAGE_FILENAME_SUFFIX;
         Picasso.with(mParentActivity).load(photoUrl).into(holder.locationIv);
