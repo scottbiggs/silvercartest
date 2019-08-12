@@ -155,6 +155,13 @@ public class LocationRVAdapter
                 loc.asset_code + ModelWindow.IMAGE_FILENAME_SUFFIX;
         Picasso.with(mParentActivity).load(photoUrl).into(holder.locationIv);
 
+        // building icon or airplane
+        if (loc.airport_code == null) {
+            holder.locationIconIv.setImageResource(R.drawable.ic_building_16dp);
+        }
+        else {
+            holder.locationIconIv.setImageResource(R.drawable.ic_airport_16dp);
+        }
 
         // Store the adapter position of this item for use during onClick
         holder.itemView.setTag(position);
@@ -257,7 +264,7 @@ public class LocationRVAdapter
     class ViewHolder extends RecyclerView.ViewHolder {
         long id;
         final TextView nameTv, airportCodeTv, descriptionTv;
-        final ImageView locationIv, locationLocoIv;
+        final ImageView locationIv, locationIconIv;
         final View backgroundView;  // allows access to the background color
 
         ViewHolder(View v) {
@@ -268,7 +275,7 @@ public class LocationRVAdapter
             descriptionTv = v.findViewById(R.id.description_tv);
 
             locationIv = v.findViewById(R.id.loc_image);
-            locationLocoIv = v.findViewById(R.id.loc_logo);
+            locationIconIv = v.findViewById(R.id.loc_logo);
 
             backgroundView = v.findViewById(R.id.background_cl);
         }
